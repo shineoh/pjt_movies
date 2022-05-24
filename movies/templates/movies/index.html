@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+{% block content %}
+  <br>
+  <div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+  <div class="loader">
+    <div class="inner">
+      <h1 class="text-center">Upcomings</h1>
+    </div>
+  </div>
+  <hr>
+  <header class="px-3" >
+    <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-bs-interval="10000">
+          {% comment %} <img src="images/header1.jpg 500*713" class="d-block w-100" alt="header1 image"> {% endcomment %}
+          <iframe height="660" class="d-block w-100" src="https://www.youtube.com/embed/7Q70_m-59O8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="carousel-item" data-bs-interval="10000">
+          <iframe height="660" class="d-block w-100" src="https://www.youtube.com/embed/h3rKe6DdC18" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <div class="carousel-item" ="10000">
+          <iframe height="660" class="d-block w-100" src="https://www.youtube.com/embed/Iif1qC2GRGs" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button> 
+    </div> 
+  </header>
+  <hr>
+  <br>
+  <div class="inner">
+    <h1 class="text-center text-light">Movies</h1>
+  </div>
+  <hr>
+  <div id="container" class="underocean">
+    <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+      {% for movie in movies %}
+        <article class="col">
+          <div class="card" style="height: 41rem;">
+            <img src="{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.title }} 이미지" style="height: 25rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{ movie.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ movie.vote_average }}</h6>
+              <p class="card-text">{{ movie.overview|truncatechars:95 }}</p>
+            </div>
+            <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-outline-secondary">디테일</a>
+          </div>
+        </article>
+      {% endfor %}
+    </section>
+  </div>
+  <hr>
+  <div class="d-flex justify-content-center">
+    {% bootstrap_pagination movies %}
+  </div>
+
+  <style>
+    html {
+      background-color: #015871 ;
+    }
+
+    .underocean {
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      background: #015871;
+    }
+  </style>
+{% endblock %}

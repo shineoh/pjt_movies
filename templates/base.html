@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en" id="html" >
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+  <script src="https://kit.fontawesome.com/13d671116b.js" crossorigin="anonymous"></script>
+  <title>Document</title>
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg" style="color:#015871">
+      <div class="container-fluid">
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="{% url 'movies:index'%}"><button class="offset" style="color:#015871">Movie</button>
+              </a>
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'community:index'%}"><button class="offset" style="color:#015871">Community</button></a>
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'movies:recommended'%}"><button class="offset" style="color:#015871">Recommend</button></a>
+          </ul>
+          {% if user.is_authenticated %}
+            <form class="wrapper">
+              <form>
+                <a type="button" class="navbtn btn btn1 btn-light form-control me-sm-2" href="{% url 'accounts:profile' user %}"><span>Profile</span></a>
+              </form>
+              <form class="btn2 navbtn btn btn-light form-control me-sm-2" action="{% url 'accounts:logout' %}" method="POST">
+                {% csrf_token %}
+                <span>
+                  <input style="background-color:transparent; border: none " type="submit" value="Logout">
+                </span>
+                </form>
+            </form>
+          {% else %}
+            <form class="container">
+              <div class="wrapper"> 
+                <a type="button" class="btn btn1 btn-light me-sm-2" href="{% url 'accounts:signup' %}"><span>Signup</span></a>
+                <a type="button" class="btn2 btn btn-light me-sm-2" href="{% url 'accounts:login' %}"><span>Login</span></a>
+              </div>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </nav>
+    {% block content %}
+    {% endblock %}
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script>
+  </script>
+  {% block script %}
+  {% endblock script %}
+  <style>
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #B7E8EB 100%);
+      overflow: auto;
+    }
+    
+    .ocean {
+      height: 5%;
+      width: 100%;
+      background: #015871;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+    
+    .wave {
+      background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+      position: absolute;
+      top: -198px;
+      width: 6400px;
+      height: 198px;
+      -webkit-animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+              animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
+    }
+    
+    .wave:nth-of-type(2) {
+      top: -175px;
+      -webkit-animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 7s ease -1.25s infinite;
+              animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 7s ease -1.25s infinite;
+      opacity: 1;
+    }
+    
+    @-webkit-keyframes wave {
+      0% {
+        margin-left: 0;
+      }
+      100% {
+        margin-left: -1600px;
+      }
+    }
+    
+    @keyframes wave {
+      0% {
+        margin-left: 0;
+      }
+      100% {
+        margin-left: -1600px;
+      }
+    }
+    @-webkit-keyframes swell {
+      0%, 100% {
+        -webkit-transform: translate3d(0, -25px, 0);
+                transform: translate3d(0, -25px, 0);
+      }
+      50% {
+        -webkit-transform: translate3d(0, 5px, 0);
+                transform: translate3d(0, 5px, 0);
+      }
+    }
+    @keyframes swell {
+      0%, 100% {
+        -webkit-transform: translate3d(0, -25px, 0);
+                transform: translate3d(0, -25px, 0);
+      }
+      50% {
+        -webkit-transform: translate3d(0, 5px, 0);
+                transform: translate3d(0, 5px, 0);
+      }
+    }
+
+    .wrapper { height: 100%; margin: 0 auto; background: #ddd; } 
+    .navbtn { border: 3px solid #fff; width: 100px; height: 40px; font-size: 17px; border-radius: 10px; position: absolute; top: 30px; left: 1100px; transform: translate(-50%, -50%); overflow: hidden; } 
+    .btn2 { position: absolute; width: 100px; height: 40px; top: 30px; left: 1220px; }
+    .navbtn:before { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 100px; background-color: #84DCC8; top: 30px; left: 1220px transform: translate(-50%); animation: waveb 12s infinite linear; transition: all 1s; } 
+    .navbtn:hover:before { top: 10px; } 
+    span { position: relative; }
+    @keyframes waveb {
+      0% { transform: translate(-50%) rotate(-180deg); }
+      100% { transform: translate(-50%) rotate(360deg); } 
+    } 
+  
+  .offset {  
+    box-shadow: 
+      0.3em 0.3em 0 0 var(--color),
+      inset 0.3em 0.3em 0 0 var(--color);
+    
+    &:hover,
+    &:focus {
+      box-shadow: 
+        0 0 0 0 var(--hover),
+        inset 6em 3.5em 0 0 var(--hover);
+    }
+  }
+  
+  @each $button, $color in $colors {
+    .#{$button} {
+      --color: #015871;
+      --hover: #{adjust-hue($color, 45deg)};
+    }
+  }
+  button {  
+    color: var(--color);
+    transition: 0.25s;
+    &:hover,
+    &:focus { 
+      border-color: var(--hover);
+      color: #fff;
+    }
+  }
+  button {
+    background: none;
+    border: 2px solid;
+    font: inherit;
+    line-height: 1;
+    margin: 0.2em;
+    padding: 0.4em;
+  }
+  </style> 
+</body>
+</html>

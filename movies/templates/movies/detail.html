@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <br>
+  <h1>DETIAL</h1>
+  <hr>
+  <div class="card">
+    <div class="card-body">
+      <img src="{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.title }} 이미지">
+      <h5 class="card-title">{{ movie.title }}</h5>
+      <p class="card-text">{{ movie.release_date }}</p>
+      <p class="card-text">{{ movie.popularity }}</p>
+      <p class="card-text">{{ movie.vote_count }}</p>
+      <p class="card-text">{{ movie.vote_average }}</p>
+      <p class="card-text">{{ movie.overview }}</p>
+      <p class="card-text">{{ movie.genres }}</p>
+      <a href="{% url 'movies:index' %}" class="btn btn-outline-secondary">뒤로가기</a>
+    </div>
+  </div>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  <br>
+  <div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
+  <h1 class="text-center">Recommend</h1>
+  <hr>
+  <form class="d-flex">
+    <input id='recoinput' class="form-control me-sm-2" type="text" placeholder="재미있게 본 영화 제목을 입력하세요">
+  </form>
+  <br>
+  <div class="container">
+    <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3" id="recoSection">
+    </section>
+  </div>
+
+
+  <style>
+    html {
+      background-color: #015871 ;
+    }
+    div.body {
+      margin: 0;
+      padding: 0;
+    }
+    .underocean {
+      width: 100%;
+      bottom: 0;
+      left: 0;
+      background: #015871;
+    }
+  </style>
+{% endblock %}
+
+
+{% block script %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const URL = 'http://127.0.0.1:8000/recommended/'
+    const recoinput = document.querySelector('#recoinput')
+    const recoSection = document.querySelector('#recoSection')
+    const imgUrl = 'https://image.tmdb.org/t/p/w500'
+    recoinput.addEventListener('input', event => {
+      event.preventDefault()
+
+      axios.defaults.xsrfCookieName = 'csrftoken'
+      axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+      const inputValue = event.target.value
+      data = {
+        recoinput: inputValue
+      }
+      axios.post(URL,data)
+      .then(res => {
+        console.log(res.data.length)
+        while (recoSection.hasChildNodes()) {
+        recoSection.removeChild(recoSection.firstChild)
+        }
+        
+        for (movie of res.data) {
+          const tempDiv = document.createElement('div')
+          tempDiv.innerHTML = `
+            <article class="col">
+              <div class="card" style="height: 41rem;">
+                <img src="${imgUrl}${ movie.poster_path }" class="card-img-top" alt="${ movie.title } 이미지" style="height: 25rem;">
+                <div class="card-body">
+                  <h5 class="card-title">${ movie.title }</h5>
+                  <h6 class="card-subtitle mb-2 text-muted">${ movie.vote_average }</h6>
+                  <p class="card-text">${ movie.overview }</p>
+                </div>
+              </div>
+            </article>
+          `
+          recoSection.append(tempDiv)
+        }
+      })
+      .catch(err => {
+        console.error(err); 
+      })
+    })
+    
+  </script>
+{% endblock script %}
+
