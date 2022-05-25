@@ -6,54 +6,125 @@
   <link rel="stylesheet" href="style.css">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
   <script src="https://kit.fontawesome.com/13d671116b.js" crossorigin="anonymous"></script>
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css'>
+  <link rel='stylesheet' href='https://fonts.googleapis.com/css?family=Montserrat&amp;display=swap"rel="stylesheet'><link rel="stylesheet" href="./style.css">
   <title>Document</title>
 </head>
 <body>
+  
   <div class="container">
-    <nav class="navbar navbar-expand-lg" style="color:#015871">
+    <nav class="navbar navbar-expand-lg" >
       <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarColor02">
-          <ul class="navbar-nav me-auto">
+        <div class="navbar-collapse " id="app">
+          <ul class="navbar-nav">
+            <div class="navwave"></div>
             <li class="nav-item">
-              <a class="nav-link" href="{% url 'movies:index'%}"><button class="offset" style="color:#015871">Movie</button>
-              </a>
+              <a class="nav-link text-dark" href="{% url 'movies:index'%}">Movies</a></li>
             <li class="nav-item">
-              <a class="nav-link " href="{% url 'community:index'%}"><button class="offset" style="color:#015871">Community</button></a>
+              <a class="nav-link text-dark" href="{% url 'community:index'%}">Community</a></li>
             <li class="nav-item">
-              <a class="nav-link " href="{% url 'movies:recommended'%}"><button class="offset" style="color:#015871">Recommend</button></a>
+              <a class="nav-link text-dark me-sm-2" href="{% url 'movies:recommended'%}">Recommend</a></li>
+            {% comment %} <div class="focus-el el--1"></div>
+            <div class="focus-el el--2"></div> {% endcomment %}
           </ul>
-          {% if user.is_authenticated %}
-            <form class="wrapper">
-              <form>
-                <a type="button" class="navbtn btn btn1 btn-light form-control me-sm-2" href="{% url 'accounts:profile' user %}"><span>Profile</span></a>
-              </form>
-              <form class="btn2 navbtn btn btn-light form-control me-sm-2" action="{% url 'accounts:logout' %}" method="POST">
-                {% csrf_token %}
-                <span>
-                  <input style="background-color:transparent; border: none " type="submit" value="Logout">
-                </span>
-                </form>
-            </form>
-          {% else %}
-            <form class="container">
-              <div class="wrapper"> 
-                <a type="button" class="btn btn1 btn-light me-sm-2" href="{% url 'accounts:signup' %}"><span>Signup</span></a>
-                <a type="button" class="btn2 btn btn-light me-sm-2" href="{% url 'accounts:login' %}"><span>Login</span></a>
-              </div>
-            </form>
-          {% endif %}
         </div>
+      
+        {% if user.is_authenticated %}
+          <form class="wrapper">
+            <form>
+              <a type="button" class="navbtn btn btn1 btn-light form-control me-sm-2" href="{% url 'accounts:profile' user %}"><span>Profile</span></a>
+            </form>
+            <form class="btn2 navbtn btn btn-light form-control me-sm-2" action="{% url 'accounts:logout' %}" method="POST">
+              {% csrf_token %}
+              <span>
+                <input style="background-color:transparent; border: none " type="submit" value="Logout">
+              </span>
+            </form>
+          </form>
+        {% else %}
+          <form class="container">
+            <div class="wrapper"> 
+              <a type="button" class="navbtn btn btn1 btn-light me-sm-2" href="{% url 'accounts:signup' %}"><span style="background-color:transparent; border: none">Signup</span></a>
+              <a type="button" class="btn2 navbtn btn btn-light me-sm-2" href="{% url 'accounts:login' %}"><span>Login</span></a>
+            </div>
+          </form>
+        {% endif %}
       </div>
     </nav>
+      {% comment %} </div>
+    </nav> {% endcomment %}
     {% block content %}
     {% endblock %}
   </div>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.1.1/gsap.min.js'></script><script  src="./script.js"></script>
   <script>
+    console.clear();
+
+    const liContainer = document.querySelector("ul");
+    const liEls = [...document.querySelectorAll("ul li")];
+    const slideEl_1 = document.querySelector(".focus-el.el--1");
+    const slideEl_2 = document.querySelector(".focus-el.el--2");
+
+    gsap.defaults({
+      ease: "ease.inOut",
+    });
+    let tl = gsap.timeline();
+
+    let liRect = liContainer.getBoundingClientRect();
+    let slideEl_1_DefaultWidth = slideEl_1.getBoundingClientRect().width;
+    let slideEl_1_DefaultLeft = slideEl_1.getBoundingClientRect().left;
+    let slideEl_2_DefaultLeft = slideEl_2.getBoundingClientRect().left;
+
+    let startPosIndex = 1;
+    let reachedEnd = false;
+    let activeIndex = startPosIndex;
+
+    let animationDuration = 0.2;
+
+    liEls.forEach((el, index) => {
+      let elRect = el.getBoundingClientRect();
+
+      el.addEventListener("click", () => {
+        if (reachedEnd && index + 1 == startPosIndex) {
+          tl.to(slideEl_1, animationDuration, { left: `${liRect.width}px` });
+          tl.to(
+            slideEl_2,
+            animationDuration,
+            { left: `${elRect.left - liRect.left}px` },
+            `-=${animationDuration}`
+          );
+          tl.set(
+            slideEl_1,
+            { left: `${slideEl_1_DefaultLeft - liRect.left}px` },
+            `+=${animationDuration}`
+          );
+          tl.set(
+            slideEl_2,
+            { left: `${slideEl_2_DefaultLeft - liRect.left}px` },
+            `+=${animationDuration}`
+          );
+        }
+
+        let timesWidth = index + 1 - activeIndex + 1 <= 0 ? 1 : index + 1 - activeIndex + 1;
+        activeIndex = index + 1;
+
+        tl.to(slideEl_1, animationDuration, { width: `${timesWidth * slideEl_1_DefaultWidth}px` });
+        if (index + 1 != startPosIndex || reachedEnd == false) {
+          tl.to(slideEl_1, animationDuration, {
+            left: calc(100% / 3),
+            width: `${slideEl_1_DefaultWidth}px`,
+          });
+        }
+
+        if (index + 1 == liEls.length) {
+          reachedEnd = true;
+        } else {
+          reachedEnd = false;
+        }
+      });
+    });
   </script>
   {% block script %}
   {% endblock script %}
@@ -64,7 +135,12 @@
 
     body {
       background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #B7E8EB 100%);
-      overflow: auto;
+      overflow-x:hidden;
+      width: 100%;
+      overflow-y:auto;
+      display: flex;
+      justify-content: center;
+
     }
     
     .ocean {
@@ -136,49 +212,96 @@
     .wrapper { height: 100%; margin: 0 auto; background: #ddd; } 
     .navbtn { border: 3px solid #fff; width: 100px; height: 40px; font-size: 17px; border-radius: 10px; position: absolute; top: 30px; left: 1100px; transform: translate(-50%, -50%); overflow: hidden; } 
     .btn2 { position: absolute; width: 100px; height: 40px; top: 30px; left: 1220px; }
-    .navbtn:before { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 100px; background-color: #84DCC8; top: 30px; left: 1220px transform: translate(-50%); animation: waveb 12s infinite linear; transition: all 1s; } 
+    .navbtn:before { content: ""; position: absolute; width: 300px; height: 300px; border-radius: 100px; background-color: #96D5D7; top: 30px; transform: translate(-50%); animation: waveb 12s infinite linear; transition: all 1s; } 
     .navbtn:hover:before { top: 10px; } 
     span { position: relative; }
     @keyframes waveb {
-      0% { transform: translate(-50%) rotate(-180deg); }
-      100% { transform: translate(-50%) rotate(360deg); } 
+      0% { transform: translate(-50%) rotate(360deg); }
+      100% { transform: translate(-50%) rotate(-180deg); } 
     } 
-  
-  .offset {  
-    box-shadow: 
-      0.3em 0.3em 0 0 var(--color),
-      inset 0.3em 0.3em 0 0 var(--color);
+    {% comment %} .navbar-nav {
+      border: 3px solid #fff; width: 100px; height: 40px; font-size: 17px; border-radius: 30px; position: absolute; top: 30px; left: 100px; transform: translate(-50%, -50%); overflow: hidden; 
+    }
+    .navbar-nav:before { content: ""; position: absolute; width: 440px; height: 480px; border-radius: 100px; background-color: #84DCC8; top: 40px; left: 150px; transform: translate(-50%); animation: waveb 40s infinite linear; transition: all 1s; } 
+    .navbar-nav:hover:before { top: 10px; }  {% endcomment %}
     
-    &:hover,
-    &:focus {
-      box-shadow: 
-        0 0 0 0 var(--hover),
-        inset 6em 3.5em 0 0 var(--hover);
+    .navbar-nav {
+      border: 3px solid #fff;
+      
     }
-  }
+    .navwave {
+      {% comment %} border: 3px {% endcomment %}
+      background: url(https://s3-us-west-2.amazonaws.com/s.cdpn.io/85486/wave.svg) repeat-x;
+      position: absolute;
+      top: 30px;
+      width: 1000px;
+      height: 500px;
+      -webkit-animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+              animation: wave 7s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite;
+      -webkit-transform: translate3d(0, 0, 0);
+              transform: translate3d(0, 0, 0);
+    }
+
+    .btn11 { border: 3px solid #fff; width: 100px; height: 40px; font-size: 17px; font-family: "montserrat"; border-radius: 10px; top: 30px; left: 1100px; transform: translate(-50%, -50%); overflow: hidden; } 
+    .btn11:before { content: ""; width: 300px; position: absolute; height: 300px; border-radius: 100px; background-color: #96D5D7; top: 30px; transform: translate(-50%); animation: waveb 12s infinite linear; transition: all 1s; } 
+    .btn11:hover:before { top: 10px; } 
+
+  {% comment %} 액티브메뉴 {% endcomment %}
+
   
-  @each $button, $color in $colors {
-    .#{$button} {
-      --color: #015871;
-      --hover: #{adjust-hue($color, 45deg)};
-    }
+  $background: #1355f6;
+  {% comment %} $font-family: "montserrat"; {% endcomment %}
+  {% comment %} $container-width: 350px; {% endcomment %}
+  $border-radius: 35px;
+  $element-count: 3;
+    
+  #app {
+    width: 330px;
+    height: 350px;
+    display: grid;
+    place-items: center;
+    
+    
   }
-  button {  
-    color: var(--color);
-    transition: 0.25s;
-    &:hover,
-    &:focus { 
-      border-color: var(--hover);
-      color: #fff;
-    }
+  #app ul {
+    position: relative;
+    width: 330px;
+    height: 50px;
+    display: grid;
+    padding : 0;
+    grid-template-columns: repeat(3, 1fr);
+    border-radius: 35px;
+    background: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 12.5px 10px rgba(0, 0, 0, 0.08), 0 100px 80px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
   }
-  button {
-    background: none;
-    border: 2px solid;
-    font: inherit;
-    line-height: 1;
-    margin: 0.2em;
-    padding: 0.4em;
+  #app ul li {
+    list-style: none;
+    display: grid;
+    place-items: center;
+    justify-content: center;
+    align-items: center;
+    font-family: "montserrat";
+    color: #1355f6;
+    padding : 0;
+    z-index: 10;
+    cursor: pointer;
+  }
+  #app ul .focus-el {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: calc(100% / 3);
+    height: 100%;
+    border-radius: 35px;
+    background: #fff;
+    box-shadow: 0 12.5px 10px rgba(0, 0, 0, 0.015), 0 100px 80px rgba(0, 0, 0, 0.03);
+  }
+  #app ul .focus-el.el--2 {
+    left: calc(-100% / 3);
+  }
+  span {
+    font-family: "montserrat";
   }
   </style> 
 </body>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load bootstrap5 %}
+
+
+{% block content %}
+  <br>
+  <h1 class='text-center'><i class="fas fa-users" style='color:skyblue'></i> Community</h1>
+  <div class='fs-5' style='color:skyblue; text-align:center'>여러분만의 영화 이야기를 우리의 영화 이야기로</div>
+  <hr>
+  {% if request.user.is_authenticated %}
+    <div class='d-flex justify-content-end'>
+      <a class="navbar-brand" href="{% url 'community:create'%}">
+        <button type="button" class="btn11 btn mb-4 mt-2">
+          <span>글쓰기</span>
+        </button>
+      </a>
+    </div>
+  {% else %}
+    <div class='d-flex justify-content-end'>
+      <a class="navbar-brand" href="{% url 'accounts:login' %}">
+        <button type="button" class="btn btn-outline-secondary mb-4">
+          회원만 작성 가능합니다.
+        </button>
+      </a>
+    </div>
+  {% endif %}
+
+  <table class="table table-striped table-hover" style="margin-top: 60px;">
+    <thead>
+      <tr class="review-th" style="text-align:center">
+        <th scope="col" width='8%'>번호</th>
+        <th scope="col" width='14%'>분류</th>
+        <th scope="col" width='29%'>TITLE</th>
+        <th scope="col" width='14%'>Writer</th>
+        <th scope="col" width='10%'>Like</th>
+        <th scope="col" width='25%'>작성일</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    {% for review in reviews %}
+      <tr class="review-td" style="text-align:center">
+        {% comment %} <th scope="row">{{ forloop.counter }}</th> {% endcomment %}
+        <td>{{ review.pk }}</td>
+        <td>{{ review.classification }}</td>
+        <td style="text-align:left"><a href="{% url 'community:detail' review.pk %}" class='link-success' style='text-decoration:none'>{{ review.title|truncatechars:32 }}</a></td>
+        <td><a href="{% url 'accounts:profile' review.user.username %}" class='link-success' style='text-decoration:none'>{{ review.user }}</a></td>
+        <td><i class="fa fa-heart" style="color:skyblue">&nbsp;{{ review.like_users.all|length }}</i></td>
+        <td>{{ review.created_at }}</td>
+      </tr>
+    {% endfor %} 
+    </tbody>
+  </table>
+
+  <div class="d-flex justify-content-center">
+    {% bootstrap_pagination reviews %}
+  </div>
+  <style>
+    
+  </style>
+{% endblock %}

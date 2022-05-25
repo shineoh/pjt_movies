@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <br>
+  <hr>
+  <div style='height:50px'>
+    <div style="width:20%; float: left; text-align: center;">
+      {{ review.user }}
+    </div>
+    <div style="width:60%; float: left; text-align: center; font-size: 1.5em;">
+      {{ review.classification }}
+    </div>
+    <div style="width:20%; float: right; text-align: center;">
+      <form class="like-form" data-review-id="{{ review.pk }}">
+        {% csrf_token %}
+        {% if user in review.like_users.all %}
+          <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart" id="itag" style="color:skyblue"> Cancle</i></button>
+        {% else %}
+          <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart-o" id="itag" style="color:skyblue"> Like</i></button>
+        {% endif %}
+      </form>
+    </div>
+  </div>
+  <div style="clear:both"></div>
+  <div style='height:80px'>
+    <div style="width:50%; float: left; text-align: left;">
+      &nbsp;&nbsp;last update : {{ review.created_at }}
+    </div>
+    <div style='width:50%; float: right; text-align: right;'>
+      <span id="like-count-{{ review.pk }}">
+        {{ review.like_users.all|length }}
+      </span>
+      명이 이 글을 좋아합니다.
+    </div>
+  </div>
+  <hr>
+  <h2 class="text-center fw-light">{{ review.title }}</h2>
+  <br>
+  <p class='fs-5 fw-light'>{{ review.content|linebreaksbr }}</p>
+  <hr>
+  {% if user == review.user %}
+    <a href="{% url 'community:update' review.pk %}" type='btn' class='btn btn-outline-dark mb-4 d-inline-block'>수정하기</a>
+    <form action="{% url 'community:delete' review.pk %}" method="POST" class='d-inline-block'>
+    {% csrf_token %}
+    <input type="submit" class='btn btn-outline-dark mb-4' value="삭제하기">
+    </form>
+  {% endif %}
+  <hr>
+
+  <h4 class='fw-bold d-inline'>댓글</h4>
+  {% if comments|length %}
+    <p class='d-inline'>({{ comments|length }})</p>
+  {% endif %}
+  <ul>
+  {% for comment in comments %}
+    <li>
+      {{ comment.content }} - {{ comment.user }}
+        {% if user == comment.user %}
+          <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
+            {% csrf_token %}
+            <button class="btn btn-outline-info btn-sm">
+              <i class="fas fa-eraser fa-sm"></i>
+            </button>
+          </form>
+        {% endif %}
+    </li>
+  {% empty %}
+    <li><b>아직 댓글이 없습니다</b></li>
+  {% endfor %}
+  </ul>
+  <hr>
+  {% if request.user.is_authenticated %}
+    <form action="{% url 'community:create_comment' review.pk %}" method="POST" class='row'>
+      {% csrf_token %}
+      <div class='col-10 d-flex'>{{ comment_form }}</div>
+      <input type="submit" class="btn btn-outline-dark col-2" value="댓글쓰기">
+    </form>
+  {% else %}
+    <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
+  {% endif %}
+  <br>
+  <div class='d-flex justify-content-end'>
+    <a href="{% url 'community:index' %}" type='btn' class='btn btn-outline-dark mb-4'>목록으로</a>
+  </div>
+{% endblock  %}
+
+{% block script %}
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script>
+    const likeForms = document.querySelectorAll('.like-form')
+    const URL = 'http://127.0.0.1:8000/community/'
+
+    likeForms.forEach(likeForm => {
+      likeForm.addEventListener('submit', event => {
+        event.preventDefault()
+        const reviewId = event.target.getAttribute('data-review-id')
+        axios.defaults.xsrfCookieName = 'csrftoken'
+        axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN'
+        axios.post(URL+`${reviewId}/like/`)
+        .then(res => {
+          const likeButton = document.querySelector(`#itag`)
+          const message = ''
+          console.log(res.data.like)
+          if (res.data.liked) {
+            likeButton.setAttribute('class', 'fa fa-heart')
+            likeButton.innerText = ' Cancle'
+          } else {
+            likeButton.setAttribute('class', 'fa fa-heart-o')
+            likeButton.innerText = ' Like'
+          }
+          const likeCountSpan = document.querySelector(`#like-count-${reviewId}`)
+          likeCountSpan.innerText = res.data.likedNum
+        })
+      })
+    })
+  </script>
+{% endblock script %}
