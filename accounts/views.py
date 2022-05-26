@@ -39,7 +39,7 @@ def login(request):
         if form.is_valid():
             auth_login(request, form.get_user())
             messages.add_message(request, messages.SUCCESS, 'Login 성공')
-            return redirect(request.GET.get('next') or 'community:index')
+            return redirect(request.GET.get('next') or 'movies:index')
     else:
         form = AuthenticationForm()
     context = {
@@ -52,7 +52,7 @@ def login(request):
 def logout(request):
     auth_logout(request)
     messages.add_message(request, messages.SUCCESS, 'Logout 성공')
-    return redirect('community:index')
+    return redirect('movies:index')
 
 
 @login_required

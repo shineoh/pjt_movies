@@ -2,11 +2,13 @@
 
 {% block content %}
 <br>
-<h1 class="text-center">로그인</h1>
+<h1 class="text-center">Login</h1>
+<br>
 <hr>
-<form action="" method="POST">
+<br>
+<form action="" method="POST" class='font4' style='text-align: center'>
   {% csrf_token %}
   {{ form.as_p }}
-  <input type="submit">
+  <input type="submit" value='로그인' class='btn btn-outline-secondary mt-3'>
 </form>
 {% endblock content %}

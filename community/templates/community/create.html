@@ -3,8 +3,9 @@
 {% block content %}
 <br>
 <h1><i class="fas fa-pencil-alt" style='color:skyblue'></i> Share your movie story</h1>
+<hr style='border: inset 5px #63C6DB; border-radius: 50px'>
 <br>
-<div class='row my-3'>
+<div class='row my-3 font4'>
   <form action="" method="POST">
     {% csrf_token %}
     {{ form.as_p }}
@@ -13,7 +14,7 @@
   </form>
   <hr>
   <div class='d-flex justify-content-end'>
-    <a href="{% url 'community:index' %}" type='btn' class='btn11 btn mt-3'><span>목록으로</span></a>
+    <a href="{% url 'community:index' %}" type='btn' class='btn11 btn mt-3'><span class="font4">목록으로</span></a>
   </div>
 </div>
 {% endblock %}

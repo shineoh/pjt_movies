@@ -9,7 +9,7 @@ class ReviewForm(forms.ModelForm):
         fields = ['title', 'classification', 'content']
         widgets = {
             'title': forms.TextInput(attrs={'class': 'form-control'}),
-            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': '리뷰를 남길 경우, 영화명과 10점 만점으로 평점을 남겨주세요 \'^\''}),
+            'content': forms.Textarea(attrs={'class': 'form-control', 'rows': 10, 'placeholder': '여러분만의 영화 이야기를 우리의 영화 이야기로 \'^\''}),
         }
 
 
@@ -19,5 +19,5 @@ class CommentForm(forms.ModelForm):
         model = Comment
         exclude = ['review', 'user']
         widgets = {
-            'content': forms.TextInput(attrs={'class': 'form-control'}),
+            'content': forms.TextInput(attrs={'class': 'form-control mx-3'}),
         }

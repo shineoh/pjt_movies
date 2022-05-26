@@ -1,8 +1,11 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_safe, require_http_methods
+from django.views.decorators.http import require_safe, require_http_methods, require_POST
 from django.core.paginator import Paginator
-from .models import Movie
+from .models import Movie, MovieComment
+# from .forms import MovieCommentForm
+from .forms import MovieCommentForm, MovieCommentUpdateForm
+from django.contrib.auth.decorators import login_required
 import requests
 import json
 
@@ -23,8 +26,12 @@ def index(request):
 @require_safe
 def detail(request, movie_pk):
     movie = get_object_or_404(Movie, pk=movie_pk)
+    comment_form = MovieCommentForm()
+    comments = movie.moviecomment_set.all()
     context = {
         'movie': movie,
+        'comment_form': comment_form,
+        'comments': comments,
     }
     return render(request, 'movies/detail.html', context)
 
@@ -111,3 +118,25 @@ def LCS(word_a, word_b):
         rlt = max(rlt, max(dp[i]))
     return rlt
 
+
+@require_POST
+def comments_create(request, pk):
+    if request.user.is_authenticated:
+        movie = get_object_or_404(Movie, pk=pk)
+        comment_form = MovieCommentForm(request.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.movie = movie
+            comment.user = request.user
+            comment.save()
+        return redirect('movies:detail', movie.pk)
+    return redirect('accounts:login')
+
+
+@require_POST
+def comments_delete(request, movie_pk, comment_pk):
+    if request.user.is_authenticated:
+        comment = get_object_or_404(MovieComment, pk=comment_pk)
+        if request.user == comment.user:
+            comment.delete()
+    return redirect('movies:detail', movie_pk)

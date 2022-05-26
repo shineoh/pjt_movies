@@ -12,12 +12,11 @@
       <h1 class="text-center">Upcomings</h1>
     </div>
   </div>
-  <hr>
+  <hr style='border: inset 5px #63C6DB; border-radius: 50px'>
   <header class="px-3" >
     <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active" data-bs-interval="10000">
-          {% comment %} <img src="images/header1.jpg 500*713" class="d-block w-100" alt="header1 image"> {% endcomment %}
           <iframe height="660" class="d-block w-100" src="https://www.youtube.com/embed/7Q70_m-59O8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
         <div class="carousel-item" data-bs-interval="10000">
@@ -39,22 +38,24 @@
   </header>
   <hr>
   <br>
-  <div class="inner">
-    <h1 class="text-center text-light">Movies</h1>
-  </div>
-  <hr>
+  
+  <br>
+  <br>
+  
+  <h1 class="text-center text-light">Movies</h1>
+  <hr style='border: inset 5px #63C6DB; border-radius: 50px'>
   <div id="container" class="underocean">
     <section class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
       {% for movie in movies %}
         <article class="col">
-          <div class="card" style="height: 41rem;">
+          <div class="card" style="border: 3px solid #fff;  height: 41rem;">
             <img src="{{ movie.poster_path }}" class="card-img-top" alt="{{ movie.title }} 이미지" style="height: 25rem;">
             <div class="card-body">
-              <h5 class="card-title">{{ movie.title }}</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ movie.vote_average }}</h6>
-              <p class="card-text">{{ movie.overview|truncatechars:95 }}</p>
+              <h4 class="card-title font4">{{ movie.title }}</h5>
+              <h6 class="card-subtitle mb-2 text-muted font4">{{ movie.vote_average }}</h6>
+              <p class="card-text font4">{{ movie.overview|truncatechars:95 }}</p>
             </div>
-            <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-outline-secondary">디테일</a>
+            <a href="{% url 'movies:detail' movie.pk %}" class="btn btn-outline-secondary font3">디테일</a>
           </div>
         </article>
       {% endfor %}

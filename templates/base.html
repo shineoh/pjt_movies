@@ -60,7 +60,7 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src='https://cdnjs.cloudflare.com/ajax/libs/gsap/3.1.1/gsap.min.js'></script><script  src="./script.js"></script>
   <script>
-    console.clear();
+    {% comment %} console.clear();
 
     const liContainer = document.querySelector("ul");
     const liEls = [...document.querySelectorAll("ul li")];
@@ -124,14 +124,42 @@
           reachedEnd = false;
         }
       });
-    });
+    }); {% endcomment %}
   </script>
   {% block script %}
   {% endblock script %}
   <style>
+    @font-face {
+      font-family: 'KOTRAHOPE';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2110@1.0/KOTRAHOPE.woff2') format('woff2');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Cafe24Ssurround';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2105_2@1.0/Cafe24Ssurround.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'KoPubDotumMedium';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_two@1.0/KoPubDotumMedium.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'BMJUA';
+      src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_one@1.0/BMJUA.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
+
     html, body {
       height: 100%;
     }
+    
+
 
     body {
       background: radial-gradient(ellipse at center, #fffeea 0%, #fffeea 35%, #B7E8EB 100%);
@@ -282,6 +310,7 @@
     justify-content: center;
     align-items: center;
     font-family: "montserrat";
+    {% comment %} font-family: "KOTRAHOPE"; {% endcomment %}
     color: #1355f6;
     padding : 0;
     z-index: 10;
@@ -302,6 +331,48 @@
   }
   span {
     font-family: "montserrat";
+    {% comment %} font-family: "KOTRAHOPE"; {% endcomment %}
+    
+  }
+
+  h1 {
+    font-family: "Cafe24Ssurround";
+  }
+
+  .font1 {
+    font-family: "montserrat";
+  }
+
+  .font2 {
+    font-family: "KOTRAHOPE";
+  }
+
+  .font3 {
+    font-family: "Cafe24Ssurround";
+  }
+
+  .font4 {
+    font-family: "BMJUA";
+  }
+
+  .page-link {
+    color: #000; 
+    background-color: #fff;
+    border: 1px solid #ccc; 
+  }
+  
+  .page-item.active .page-link {
+    z-index: 1;
+    color: #555;
+    font-weight:bold;
+    background-color: #f1f1f1;
+    border-color: #ccc;
+  }
+  
+  .page-link:focus, .page-link:hover {
+    color: #000;
+    background-color: #fafafa; 
+    border-color: #ccc;
   }
   </style> 
 </body>

@@ -7,10 +7,10 @@
     <div class="wave"></div>
     <div class="wave"></div>
   </div>
-  <h1 class="text-center">Recommend</h1>
-  <hr>
+  <h1 class="text-center ">Recommend</h1>
+  <hr style='border: inset 5px #63C6DB; border-radius: 50px'>
   <form class="d-flex">
-    <input id='recoinput' class="form-control me-sm-2" type="text" placeholder="재미있게 본 영화 제목을 입력하세요">
+    <input id='recoinput' class="form-control me-sm-2 font4" type="text" placeholder="재미있게 본 영화 제목을 입력하세요">
   </form>
   <br>
   <div class="container">
@@ -64,12 +64,12 @@
           const tempDiv = document.createElement('div')
           tempDiv.innerHTML = `
             <article class="col">
-              <div class="card" style="height: 41rem;">
+              <div class="card" style="border: 3px solid #fff; height: 41rem;">
                 <img src="${imgUrl}${ movie.poster_path }" class="card-img-top" alt="${ movie.title } 이미지" style="height: 25rem;">
                 <div class="card-body">
-                  <h5 class="card-title">${ movie.title }</h5>
-                  <h6 class="card-subtitle mb-2 text-muted">${ movie.vote_average }</h6>
-                  <p class="card-text">${ movie.overview }</p>
+                  <h5 class="card-title font4">${ movie.title }</h5>
+                  <h6 class="card-subtitle mb-2 text-muted font4">${ movie.vote_average }</h6>
+                  <p class="card-text font4">${ movie.overview }</p>
                 </div>
               </div>
             </article>

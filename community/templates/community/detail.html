@@ -2,85 +2,90 @@
 
 {% block content %}
   <br>
+  <hr style='border: inset 5px #63C6DB; border-radius: 50px'>
+    <div class='font4' style='height:50px'>
+      <div style="width:20%; float: left; text-align: center;">
+        {{ review.user }}
+      </div>
+      <div style="width:60%; float: left; text-align: center;">
+        {{ review.created_at }}
+      </div>
+      <div style="width:20%; float: right; text-align: center;">
+        <form class="like-form" data-review-id="{{ review.pk }}">
+          {% csrf_token %}
+          {% if user in review.like_users.all %}
+            <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart" id="itag" style="color:#4089E1;"> Cancle</i></button>
+          {% else %}
+            <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart-o" id="itag"  style="color:#4089E1;"> Like</i></button>
+          {% endif %}
+        </form>
+      </div>
+    </div>
+    <div style="clear:both"></div>
+    <div class='font4' style='height:30px'>
+      <div style="width:20%; float: left; text-align: center;">
+        &nbsp;&nbsp;{{ review.classification }}
+      </div>
+      <div style='width:80%; float: right; text-align: right;'>
+        <span id="like-count-{{ review.pk }}">
+          {{ review.like_users.all|length }}
+        </span>
+      명이 이 글을 좋아합니다.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      </div>
+    </div>
   <hr>
-  <div style='height:50px'>
-    <div style="width:20%; float: left; text-align: center;">
-      {{ review.user }}
-    </div>
-    <div style="width:60%; float: left; text-align: center; font-size: 1.5em;">
-      {{ review.classification }}
-    </div>
-    <div style="width:20%; float: right; text-align: center;">
-      <form class="like-form" data-review-id="{{ review.pk }}">
-        {% csrf_token %}
-        {% if user in review.like_users.all %}
-          <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart" id="itag" style="color:skyblue"> Cancle</i></button>
-        {% else %}
-          <button class="btn btn-transparent" id="like-{{ review.pk }}"><i class="fa fa-heart-o" id="itag" style="color:skyblue"> Like</i></button>
-        {% endif %}
+  <br>
+  <h2 class="text-center fw-light font3" style='color: #008C8C;'><b>{{ review.title }}</b></h2>
+  <br>
+  <p class='fs-5 fw-light font4'>{{ review.content|linebreaksbr }}</p>
+  <br><br><br><br><br><br>
+  <p align='right' class='font4'>last update : {{ review.updated_at}}</p>
+  {% if user == review.user %}
+    <div class='d-flex justify-content-end'>
+      <a href="{% url 'community:update' review.pk %}" type='btn' class='btn btn-outline-secondary font4 mb-4 d-inline-block'>수정하기</a>
+      &nbsp;
+      <form action="{% url 'community:delete' review.pk %}" method="POST" class='d-inline-block'>
+      {% csrf_token %}
+      <input type="submit" class='btn btn-outline-secondary font4 mb-4' value="삭제하기">
       </form>
     </div>
-  </div>
-  <div style="clear:both"></div>
-  <div style='height:80px'>
-    <div style="width:50%; float: left; text-align: left;">
-      &nbsp;&nbsp;last update : {{ review.created_at }}
-    </div>
-    <div style='width:50%; float: right; text-align: right;'>
-      <span id="like-count-{{ review.pk }}">
-        {{ review.like_users.all|length }}
-      </span>
-      명이 이 글을 좋아합니다.
-    </div>
-  </div>
-  <hr>
-  <h2 class="text-center fw-light">{{ review.title }}</h2>
-  <br>
-  <p class='fs-5 fw-light'>{{ review.content|linebreaksbr }}</p>
-  <hr>
-  {% if user == review.user %}
-    <a href="{% url 'community:update' review.pk %}" type='btn' class='btn btn-outline-dark mb-4 d-inline-block'>수정하기</a>
-    <form action="{% url 'community:delete' review.pk %}" method="POST" class='d-inline-block'>
-    {% csrf_token %}
-    <input type="submit" class='btn btn-outline-dark mb-4' value="삭제하기">
-    </form>
   {% endif %}
-  <hr>
-
-  <h4 class='fw-bold d-inline'>댓글</h4>
+  <hr style='border: outset 5px #63C6DB; border-radius: 50px'>
+  <h4 class='fw-bold d-inline font3'>댓글</h4>
   {% if comments|length %}
-    <p class='d-inline'>({{ comments|length }})</p>
+    <p class='d-inline font3'>({{ comments|length }})</p>
   {% endif %}
+  <br><br>
   <ul>
   {% for comment in comments %}
-    <li>
-      {{ comment.content }} - {{ comment.user }}
+    <li class='font4'>
+      {{ comment.content }} - {{ comment.user }} ({{ comment.updated_at }})
         {% if user == comment.user %}
           <form action="{% url 'community:delete_comment' review.pk comment.pk %}" method="POST" class="d-inline">
             {% csrf_token %}
-            <button class="btn btn-outline-info btn-sm">
-              <i class="fas fa-eraser fa-sm"></i>
+            <button class="btn btn-outline-default btn-sm" style="color:#E73D3D;">
+              <i class="fas fa-eraser fa-sm" ></i>
             </button>
           </form>
         {% endif %}
     </li>
   {% empty %}
-    <li><b>아직 댓글이 없습니다</b></li>
+    <li class='font4'>아직 댓글이 없습니다</li>
   {% endfor %}
   </ul>
   <hr>
   {% if request.user.is_authenticated %}
     <form action="{% url 'community:create_comment' review.pk %}" method="POST" class='row'>
       {% csrf_token %}
-      <div class='col-10 d-flex'>{{ comment_form }}</div>
-      <input type="submit" class="btn btn-outline-dark col-2" value="댓글쓰기">
+      <div class='col-10 d-flex font4'>{{ comment_form }}</div>
+      <input type="submit" class="btn btn-outline-secondary col-2 font4" value="댓글쓰기">
     </form>
   {% else %}
     <a href="{% url 'accounts:login' %}">[댓글을 작성하려면 로그인하세요.]</a>
   {% endif %}
   <br>
   <div class='d-flex justify-content-end'>
-    <a href="{% url 'community:index' %}" type='btn' class='btn btn-outline-dark mb-4'>목록으로</a>
+    <a href="{% url 'community:index' %}" type='btn' class='btn btn-outline-secondary mb-4 font4'>목록으로</a>
   </div>
 {% endblock  %}
 

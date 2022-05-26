@@ -4,6 +4,7 @@ from .models import Review, Comment
 from .forms import ReviewForm, CommentForm
 from django.http import JsonResponse
 from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
 
 
 @require_GET
@@ -66,6 +67,7 @@ def update(request, pk):
 
 
 @require_GET
+@login_required
 def detail(request, review_pk):
     review = get_object_or_404(Review, pk=review_pk)
     comments = review.comment_set.all()
