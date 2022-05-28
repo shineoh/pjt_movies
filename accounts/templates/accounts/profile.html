@@ -2,6 +2,10 @@
 
 {% block content %}
   <br><br>
+  <div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+  </div>
   <h2 class='font4'>{{ person.username }}'s Profile</h2>
   <hr style='border: inset 5px #63C6DB; border-radius: 50px'>
   {% with followings=person.followings.all followers=person.followers.all %}
